@@ -64,26 +64,30 @@
 
         // Função que manda a notificação real para o telemóvel
         function dispararNotificacao() {
-            if ('Notification' in window && Notification.permission === 'granted') {
-
-                // Simular um atraso de 3 segundos para dar tempo de minimizar a app se quiseres
-                setTimeout(() => {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.showNotification("💊 HORA DO MEDICAMENTO", {
-                            body: "Está na hora de tomar 1 comprimido de Paracetamol.",
-                            icon: "https://cdn-icons-png.flaticon.com/512/3074/3074058.png",
-                            vibrate: [200, 100, 200], // Fazer o telemóvel vibrar
-                            tag: "lembrete-remedio"
-                        });
-                    });
-                }, 3000);
-
-                alert("A notificação vai aparecer em 3 segundos! Se quiseres, podes minimizar a app para ver o banner a cair no ecrã.");
-            } else {
-                alert("Por favor, permite as notificações no aviso que aparece no ecrã!");
+            if (!('Notification' in window)) {
+                alert('Este telemóvel não suporta notificações.');
+                return;
             }
-        }
 
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    alert('A notificação vai sair daqui a 4 segundos! Minimiza o aplicativo AGORA.');
+
+                    setTimeout(() => {
+                        if (navigator.serviceWorker.controller) {
+                            // Envia o comando para o sw.js disparar o aviso
+                            navigator.serviceWorker.controller.postMessage({
+                                type: 'NOTIFICACAO',
+                                titulo: '💊 HORA DO MEDICAMENTO',
+                                corpo: 'Está na hora de tomar 1 comprimido de Paracetamol.'
+                            });
+                        }
+                    }, 4000);
+                } else {
+                    alert('A permissão foi negada. Precisas de ativar as notificações nas definições do Chrome/Telemóvel.');
+                }
+            });
+        }
         // Função de áudio
         function testarVoz() {
             if ('speechSynthesis' in window) {
