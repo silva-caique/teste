@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Teste Idosos</title>
+
+    <!-- Ligar a PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#28a745">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #333;
+        }
+
+        p {
+            font-size: 20px;
+            color: #555;
+        }
+
+        .btn-teste {
+            background-color: #28a745;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>👴 App de Apoio</h1>
+    <p>Esta é uma aplicação de teste fácil e rápida!</p>
+
+    <button class="btn-teste" onclick="testarVoz()">🔊 OUVIR INSTRUÇÃO</button>
+
+    <script>
+        // Teste simples de voz (Text-to-Speech)
+        function testarVoz() {
+            if ('speechSynthesis' in window) {
+                const mensagem = new SpeechSynthesisUtterance("Olá! O teste da aplicação funcionou com sucesso.");
+                mensagem.lang = 'pt-PT';
+                window.speechSynthesis.speak(mensagem);
+            } else {
+                alert("O seu navegador não suporta voz.");
+            }
+        }
+
+        // Registo obrigatório da PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+
+</html>
